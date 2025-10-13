@@ -56,10 +56,45 @@ app.get('/api/circuits/season/:year', async (req, res) => {
     }
 });
 app.get('/api/constructors', async (req, res) => {
-        const { data, error} = await supabase
+    const { data, error} = await supabase
+        .from('constructors')
+        .select('*');
+        res.send(data);
+});
+app.get('/api/constructors/:constructorRef', async (req, res) => {
+    try {
+        const { data, error, status } = await supabase
             .from('constructors')
-            .select('*');
-            res.send(data);
+            .select('*')
+            .eq('constructorRef', req.params.constructorRef);
+        if (data.length === 0) {
+            return res.status(404).json({ error: `constructorRef '${req.params.constructorRef}' not found` });
+        }
+        return res.json(data);
+    } catch (err) {
+        return res.json({ error: err.message });
+    }
+});
+app.get('/api/drivers', async (req, res) => {
+    const { data, error} = await supabase
+        .from('drivers')
+        .select('*');
+        res.send(data);
+});
+
+app.get('/api/drivers/:driverRef', async (req, res) => {
+    try {
+        const { data, error, status } = await supabase
+            .from('drivers')
+            .select('*')
+            .eq('driverRef', req.params.driverRef);
+        if (data.length === 0) {
+            return res.status(404).json({ error: `driverRef '${req.params.driverRef}' not found` });
+        }
+        return res.json(data);
+    } catch (err) {
+        return res.json({ error: err.message });
+    }
 });
 
 
