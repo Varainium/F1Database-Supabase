@@ -55,6 +55,13 @@ app.get('/api/circuits/season/:year', async (req, res) => {
         return res.json({ error: err.message });
     }
 });
+app.get('/api/constructors', async (req, res) => {
+        const { data, error} = await supabase
+            .from('constructors')
+            .select('*');
+            res.send(data);
+});
+
 
 
 app.listen(8080, () => {
