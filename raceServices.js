@@ -68,7 +68,7 @@ router.get('/api/races/circuits/:circuitRef', async (req, res) => { // WORKS
     }
 });
 router.get('/api/races/circuits/:circuitRef/season/:start/:end', async (req, res) => { // WORKS
-    try { 
+    try {
         if (req.params.end < req.params.start) {
             return res.status(400).json({ error: `End year '${req.params.end}' cannot be less than start year '${req.params.start}'` });
         }

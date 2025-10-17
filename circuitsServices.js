@@ -11,10 +11,10 @@ const supabase = supa.createClient(supaUrl, supaAnonKey);
 
 
 router.get('/api/circuits', async (req, res) => { // WORKS
-    const {data, error} = await supabase
+    const { data, error } = await supabase
         .from('circuits')
         .select('*');
-        res.send(data);
+    res.send(data);
 });
 
 router.get('/api/circuits/:circuitRef', async (req, res) => { // WORKS
@@ -25,7 +25,7 @@ router.get('/api/circuits/:circuitRef', async (req, res) => { // WORKS
             .select(`circuitId, circuitRef, name, location, country, lat, lng, alt, url`)
             .eq('circuitRef', req.params.circuitRef)
 
-    
+
         if (data.length === 0) {
             return res.status(404).json({ error: `circuitRef '${req.params.circuitRef}' not found` });
         }
@@ -42,7 +42,7 @@ router.get('/api/circuits/season/:year', async (req, res) => { // WORKS
             .from('races')
             .select(`year, round, circuitId, date, time, url, circuit:circuitId (name, location, country)`)
             .eq('year', req.params.year)
-            .order('round', { ascending: true});
+            .order('round', { ascending: true });
         if (data.length === 0) {
             return res.status(404).json({ error: `No races found for year '${req.params.year}'` });
         }

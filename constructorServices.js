@@ -10,10 +10,10 @@ const supaAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = supa.createClient(supaUrl, supaAnonKey);
 
 router.get('/api/constructors', async (req, res) => { // WORKS
-    const { data, error} = await supabase
+    const { data, error } = await supabase
         .from('constructors')
         .select('*');
-        res.send(data);
+    res.send(data);
 });
 router.get('/api/constructors/:constructorRef', async (req, res) => {   // WORKS
     try {

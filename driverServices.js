@@ -10,10 +10,10 @@ const supaAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = supa.createClient(supaUrl, supaAnonKey);
 
 router.get('/api/drivers', async (req, res) => {
-    const { data, error} = await supabase
+    const { data, error } = await supabase
         .from('drivers')
         .select('*');
-        res.send(data);
+    res.send(data);
 });
 
 router.get('/api/drivers/:driverRef', async (req, res) => {    // WORKS
@@ -33,9 +33,9 @@ router.get('/api/drivers/:driverRef', async (req, res) => {    // WORKS
 router.get('/api/drivers/search/:substring', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
-                .from('drivers')
-                .select('*')
-                .ilike('surname', `%${req.params.substring}%`);
+            .from('drivers')
+            .select('*')
+            .ilike('surname', `%${req.params.substring}%`);
         if (data.length === 0) {
             return res.status(404).json({ error: `No drivers found with substring '${req.params.substring}'` });
         }
