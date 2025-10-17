@@ -9,117 +9,6 @@ const supaAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = supa.createClient(supaUrl, supaAnonKey);
 
-
-app.get('/api/circuits', async (req, res) => { // WORKS
-    const {data, error} = await supabase
-        .from('circuits')
-        .select('*');
-        res.send(data);
-});
-
-app.get('/api/circuits/:circuitRef', async (req, res) => { // WORKS
-
-    try {
-        const { data, error, status } = await supabase
-            .from('circuits')
-            .select(`circuitId, circuitRef, name, location, country, lat, lng, alt, url`)
-            .eq('circuitRef', req.params.circuitRef)
-
-    
-        if (data.length === 0) {
-            return res.status(404).json({ error: `circuitRef '${req.params.circuitRef}' not found` });
-        }
-        return res.json(data);
-
-    } catch (err) {
-        return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
-    }
-});
-
-app.get('/api/circuits/season/:year', async (req, res) => { // WORKS
-    try {
-        const { data, error, status } = await supabase
-            .from('races')
-            .select(`year, round, circuitId, date, time, url, circuit:circuitId (name, location, country)`)
-            .eq('year', req.params.year)
-            .order('round', { ascending: true});
-        if (data.length === 0) {
-            return res.status(404).json({ error: `No races found for year '${req.params.year}'` });
-        }
-        return res.json(data);
-    } catch (err) {
-        return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
-    }
-});
-app.get('/api/constructors', async (req, res) => { // WORKS
-    const { data, error} = await supabase
-        .from('constructors')
-        .select('*');
-        res.send(data);
-});
-app.get('/api/constructors/:constructorRef', async (req, res) => {   // WORKS
-    try {
-        const { data, error, status } = await supabase
-            .from('constructors')
-            .select('*')
-            .eq('constructorRef', req.params.constructorRef);
-        if (data.length === 0) {
-            return res.status(404).json({ error: `constructorRef '${req.params.constructorRef}' not found` });
-        }
-        return res.json(data);
-    } catch (err) {
-        return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
-    }
-});
-app.get('/api/drivers', async (req, res) => {
-    const { data, error} = await supabase
-        .from('drivers')
-        .select('*');
-        res.send(data);
-});
-
-app.get('/api/drivers/:driverRef', async (req, res) => {    // WORKS
-    try {
-        const { data, error, status } = await supabase
-            .from('drivers')
-            .select('*')
-            .eq('driverRef', req.params.driverRef);
-        if (data.length === 0) {
-            return res.status(404).json({ error: `driverRef '${req.params.driverRef}' not found` });
-        }
-        return res.json(data);
-    } catch (err) {
-        return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
-    }
-});
-app.get('/api/drivers/search/:substring', async (req, res) => { // WORKS
-    try {
-        const { data, error, status } = await supabase
-                .from('drivers')
-                .select('*')
-                .ilike('surname', `%${req.params.substring}%`);
-        if (data.length === 0) {
-            return res.status(404).json({ error: `No drivers found with substring '${req.params.substring}'` });
-        }
-        return res.json(data);
-    } catch (err) {
-        return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
-    }
-});
-app.get('/api/drivers/race/:raceId', async (req, res) => { // WORKS
-    try {
-        const { data, error, status } = await supabase
-            .from('drivers')
-            .select('driverId, results!inner (raceId), number, forename, surname, dob, nationality')
-            .eq('results.raceId', req.params.raceId);
-        if (data.length === 0) {
-            return res.status(404).json({ error: `No drivers found for raceId '${req.params.raceId}'` });
-        }
-        return res.json(data);
-    } catch (err) {
-        return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
-    }
-});
 app.get('/api/races/:raceId', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
@@ -212,39 +101,6 @@ app.get('/api/results/:raceId', async (req, res) => { // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/results/drivers/:driverRef', async (req, res) => { // WORKS Hamilton
-    try {
-        const { data, error, status } = await supabase
-            .from('results')
-            .select('drivers!inner (forename, surname, nationality), races!inner (name, year), positionText, positionOrder, points, laps, time, milliseconds, fastestLap, rank, fastestLapTime, fastestLapSpeed')
-            .eq('drivers.driverRef', req.params.driverRef);
-        if (data.length === 0) {
-            return res.status(404).json({ error: `No results found for driverRef '${req.params.driverRef}'` });
-        }
-        return res.json(data);
-    } catch (err) {
-        return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
-    }
-});
-app.get('/api/results/drivers/:driverRef/seasons/:start/:end', async (req, res) => { // WORKS hamilton, 2008-2010
-    try {
-        if (req.params.end < req.params.start) {
-            return res.status(400).json({ error: `End year '${req.params.end}' cannot be less than start year '${req.params.start}'` });
-        }
-        const { data, error, status } = await supabase
-            .from('results')
-            .select('drivers!inner (forename, surname, nationality), races!inner (name, year), number, grid, position, positionText, positionOrder, points, laps, time, milliseconds, fastestLap, rank, fastestLapTime, fastestLapSpeed')
-            .eq('drivers.driverRef', req.params.driverRef)
-            .gte('races.year', req.params.start)
-            .lte('races.year', req.params.end);
-        if (data.length === 0) {
-            return res.status(404).json({ error: `No results found for driverRef '${req.params.driverRef}' between years '${req.params.start}' and '${req.params.end}'` });
-        }
-        return res.json(data);
-    } catch (err) {
-        return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
-    }
-});
 app.get('/api/qualifying/:raceId', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
@@ -291,7 +147,6 @@ app.get('/api/standings/constructors/:raceId', async (req, res) => { // WORKS
     }
 });
 
-
-app.listen(8080, () => {
-    console.log('Server is running on port 8080');
+app.listen(8050, () => {
+    console.log('Server is running on port 8050');
 });
