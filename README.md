@@ -1,11 +1,19 @@
 # Formula 1 Data API
 ## Overview
-This project is an API to querying F1 data such as circuits, constructors, drivers, and races.
+This project is comprised of F1 Formula API's that query from a database. \
+Below showcases all the available API's available to be called from the database.
 
 ## Built with
-Node.Js - JS Runtime \
-Express - Routing \
-Render - To deploy the API's.
+Node.Js \
+Express  \
+Render 
+
+
+## To run locally
+1. Download this repository to your local drive
+2. Open on VSCode terminal or a terminal of your own choosing
+3. Run "node server" or "node server.js"
+4. Visit port 8080 at localhost and add any of the API endpoints down below to call the API.
 
 
 ## API Endpoints
