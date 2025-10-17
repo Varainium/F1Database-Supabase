@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const app = express();
+const router = express.Router();
 const supa = require('@supabase/supabase-js');
 
 
@@ -9,14 +9,14 @@ const supaAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = supa.createClient(supaUrl, supaAnonKey);
 
-app.get('/api/drivers', async (req, res) => {
+router.get('/api/drivers', async (req, res) => {
     const { data, error} = await supabase
         .from('drivers')
         .select('*');
         res.send(data);
 });
 
-app.get('/api/drivers/:driverRef', async (req, res) => {    // WORKS
+router.get('/api/drivers/:driverRef', async (req, res) => {    // WORKS
     try {
         const { data, error, status } = await supabase
             .from('drivers')
@@ -30,7 +30,7 @@ app.get('/api/drivers/:driverRef', async (req, res) => {    // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/drivers/search/:substring', async (req, res) => { // WORKS
+router.get('/api/drivers/search/:substring', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
                 .from('drivers')
@@ -44,7 +44,7 @@ app.get('/api/drivers/search/:substring', async (req, res) => { // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/drivers/race/:raceId', async (req, res) => { // WORKS
+router.get('/api/drivers/race/:raceId', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
             .from('drivers')
@@ -58,7 +58,7 @@ app.get('/api/drivers/race/:raceId', async (req, res) => { // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/results/drivers/:driverRef', async (req, res) => { // WORKS Hamilton
+router.get('/api/results/drivers/:driverRef', async (req, res) => { // WORKS Hamilton
     try {
         const { data, error, status } = await supabase
             .from('results')
@@ -72,7 +72,7 @@ app.get('/api/results/drivers/:driverRef', async (req, res) => { // WORKS Hamilt
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/results/drivers/:driverRef/seasons/:start/:end', async (req, res) => { // WORKS hamilton, 2008-2010
+router.get('/api/results/drivers/:driverRef/seasons/:start/:end', async (req, res) => { // WORKS hamilton, 2008-2010
     try {
         if (req.params.end < req.params.start) {
             return res.status(400).json({ error: `End year '${req.params.end}' cannot be less than start year '${req.params.start}'` });
@@ -92,6 +92,4 @@ app.get('/api/results/drivers/:driverRef/seasons/:start/:end', async (req, res) 
     }
 });
 
-app.listen(8060, () => {
-    console.log('Server is running on port 8060');
-});
+module.exports = router;

@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const app = express();
+const router = express.Router();
 const supa = require('@supabase/supabase-js');
 
 
@@ -9,7 +9,7 @@ const supaAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = supa.createClient(supaUrl, supaAnonKey);
 
-app.get('/api/races/:raceId', async (req, res) => { // WORKS
+router.get('/api/races/:raceId', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
             .from('races')
@@ -23,7 +23,7 @@ app.get('/api/races/:raceId', async (req, res) => { // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/races/season/:year', async (req, res) => { // WORKS
+router.get('/api/races/season/:year', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
             .from('races')
@@ -38,7 +38,7 @@ app.get('/api/races/season/:year', async (req, res) => { // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/races/season/:year/:round', async (req, res) => { // WORKS
+router.get('/api/races/season/:year/:round', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
             .from('races')
@@ -53,7 +53,7 @@ app.get('/api/races/season/:year/:round', async (req, res) => { // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/races/circuits/:circuitRef', async (req, res) => { // WORKS
+router.get('/api/races/circuits/:circuitRef', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
             .from('races')
@@ -67,7 +67,7 @@ app.get('/api/races/circuits/:circuitRef', async (req, res) => { // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/races/circuits/:circuitRef/season/:start/:end', async (req, res) => { // WORKS
+router.get('/api/races/circuits/:circuitRef/season/:start/:end', async (req, res) => { // WORKS
     try { 
         if (req.params.end < req.params.start) {
             return res.status(400).json({ error: `End year '${req.params.end}' cannot be less than start year '${req.params.start}'` });
@@ -86,7 +86,7 @@ app.get('/api/races/circuits/:circuitRef/season/:start/:end', async (req, res) =
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/results/:raceId', async (req, res) => { // WORKS
+router.get('/api/results/:raceId', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
             .from('results')
@@ -101,7 +101,7 @@ app.get('/api/results/:raceId', async (req, res) => { // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/qualifying/:raceId', async (req, res) => { // WORKS
+router.get('/api/qualifying/:raceId', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
             .from('qualifying')
@@ -116,7 +116,7 @@ app.get('/api/qualifying/:raceId', async (req, res) => { // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/standings/drivers/:raceId', async (req, res) => { // WORKS
+router.get('/api/standings/drivers/:raceId', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
             .from('driverStandings')
@@ -131,7 +131,7 @@ app.get('/api/standings/drivers/:raceId', async (req, res) => { // WORKS
         return res.json({ error: 'Data could not be retrieved. Please check for syntax or logic errors.' });
     }
 });
-app.get('/api/standings/constructors/:raceId', async (req, res) => { // WORKS
+router.get('/api/standings/constructors/:raceId', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
             .from('constructorStandings')
@@ -147,6 +147,4 @@ app.get('/api/standings/constructors/:raceId', async (req, res) => { // WORKS
     }
 });
 
-app.listen(8050, () => {
-    console.log('Server is running on port 8050');
-});
+module.exports = router;

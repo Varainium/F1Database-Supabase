@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const app = express();
+const router = express.Router();
 const supa = require('@supabase/supabase-js');
 
 
@@ -9,13 +9,13 @@ const supaAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = supa.createClient(supaUrl, supaAnonKey);
 
-app.get('/api/constructors', async (req, res) => { // WORKS
+router.get('/api/constructors', async (req, res) => { // WORKS
     const { data, error} = await supabase
         .from('constructors')
         .select('*');
         res.send(data);
 });
-app.get('/api/constructors/:constructorRef', async (req, res) => {   // WORKS
+router.get('/api/constructors/:constructorRef', async (req, res) => {   // WORKS
     try {
         const { data, error, status } = await supabase
             .from('constructors')
@@ -30,6 +30,4 @@ app.get('/api/constructors/:constructorRef', async (req, res) => {   // WORKS
     }
 });
 
-app.listen(8070, () => {
-    console.log('Server is running on port 8070');
-});
+module.exports = router;

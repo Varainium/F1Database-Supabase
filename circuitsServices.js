@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const app = express();
+const router = express.Router();
 const supa = require('@supabase/supabase-js');
 
 
@@ -10,14 +10,14 @@ const supaAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = supa.createClient(supaUrl, supaAnonKey);
 
 
-app.get('/api/circuits', async (req, res) => { // WORKS
+router.get('/api/circuits', async (req, res) => { // WORKS
     const {data, error} = await supabase
         .from('circuits')
         .select('*');
         res.send(data);
 });
 
-app.get('/api/circuits/:circuitRef', async (req, res) => { // WORKS
+router.get('/api/circuits/:circuitRef', async (req, res) => { // WORKS
 
     try {
         const { data, error, status } = await supabase
@@ -36,7 +36,7 @@ app.get('/api/circuits/:circuitRef', async (req, res) => { // WORKS
     }
 });
 
-app.get('/api/circuits/season/:year', async (req, res) => { // WORKS
+router.get('/api/circuits/season/:year', async (req, res) => { // WORKS
     try {
         const { data, error, status } = await supabase
             .from('races')
@@ -52,6 +52,4 @@ app.get('/api/circuits/season/:year', async (req, res) => { // WORKS
     }
 });
 
-app.listen(8080, () => {
-    console.log('Server is running on port 8080');
-});
+module.exports = router;
